@@ -24,8 +24,21 @@ class MealDetailsScreen extends ConsumerWidget {
             onPressed: () {
               ref.read(favoriteMealsProvider.notifier).toggleFavoriteMeal(meal);
             },
-            icon: Icon(
-              isFavorited ? Icons.favorite_rounded : Icons.favorite_outline,
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return ScaleTransition(
+                  scale: Tween<double>(
+                    begin: 0.8,
+                    end: 1,
+                  ).animate(animation),
+                  child: child,
+                );
+              },
+              child: Icon(
+                isFavorited ? Icons.favorite_rounded : Icons.favorite_outline,
+                key: ValueKey(isFavorited),
+              ),
             ),
           )
         ],
@@ -35,11 +48,14 @@ class MealDetailsScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.network(
-                meal.imageUrl,
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Hero(
+                tag: meal.id,
+                child: Image.network(
+                  meal.imageUrl,
+                  height: 300,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(
                 height: 8,
